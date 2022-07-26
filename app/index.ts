@@ -13,7 +13,7 @@ const getUser = (token: any[]) => {
             // return the user information from the token
             return jwt.verify(token, "UNSAFE_STRING");
         } catch (err) {
-            // if there's a problem with the token, throw an error
+            // If there's a problem with the token, throw an error
             return { error: true, msg: "Session invalid" };
         }
     }
@@ -23,7 +23,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: ({ req }: any) => {
-        // We will verify the user's identity here.
+        //Authorization
         if (req.body.query.match("getWeather")) {
             if (req.headers && req.headers.authorization) {
                 var auth = req.headers.authorization;
@@ -46,13 +46,14 @@ const server = new ApolloServer({
         }
     },
     playground: {
-        endpoint: "http://localhost:3000/graphql",
+        endpoint: "http://localhost:5000/graphql",
         settings: {
             "editor.theme": "light",
         },
     },
 });
 
+//Connection to the MongoDB Database
 mongoose.connect(MONGODB, { useNewUrlParser: true })
     .then(() => {
         console.log("MongoDB Connected");
