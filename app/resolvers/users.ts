@@ -6,8 +6,10 @@ const jwt = require("jsonwebtoken");
 module.exports = {
     Mutation: {
         async registerUser(_: any, { registerInput: { username, email, password } }: any) {
+            
+             const lowerCaseEmail = email.toLowerCase();
             //Checking If the User Already Exists
-            const checkUser = await User.findOne({ email })
+            const checkUser = await User.findOne({ email : lowerCaseEmail })
 
             if (checkUser) {
                 throw new ApolloError("User Already Exists!!! Please Sign In", "USER_ALREADY_EXISTS");
@@ -44,8 +46,10 @@ module.exports = {
         },
 
         async loginUser(_: any, { loginInput: { email, password } }: any) {
+            
+            const lowerCaseEmail = email.toLowerCase();
             //Checking If the User Exists
-            const checkUser = await User.findOne({ email })
+            const checkUser = await User.findOne({ email : lowerCaseEmail })
 
             //Checking the password is correct 
             if (checkUser && (await bcrypt.compare(password, checkUser.password))) {
